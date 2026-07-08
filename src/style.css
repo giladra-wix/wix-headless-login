@@ -1,0 +1,99 @@
+:root {
+  --bg: #f7f6f3;
+  --surface: #ffffff;
+  --text: #1c1c1c;
+  --muted: #6b6b6b;
+  --accent: #116dff;
+  --border: #e6e3dd;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141414;
+    --surface: #1f1f1f;
+    --text: #f0f0f0;
+    --muted: #a0a0a0;
+    --border: #2e2e2e;
+  }
+}
+
+* { box-sizing: border-box; margin: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.hero {
+  padding: 72px 24px 48px;
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 8px 0 12px; }
+.subtitle { color: var(--muted); }
+.subtitle code { font-size: 0.9em; }
+
+main { max-width: 1080px; margin: 0 auto; padding: 0 24px 64px; }
+
+section { margin-top: 48px; }
+section h2 { font-size: 1.5rem; }
+.section-note { color: var(--muted); font-size: 0.9rem; margin-bottom: 16px; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.card img, .img-placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--border);
+}
+
+.card-body { padding: 16px; }
+.card h3 { font-size: 1.05rem; margin-bottom: 4px; }
+.price { color: var(--accent); font-weight: 600; margin-bottom: 8px; }
+.desc {
+  color: var(--muted);
+  font-size: 0.875rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.loading, .error { color: var(--muted); grid-column: 1 / -1; }
+.error { color: #c0392b; }
+
+footer {
+  border-top: 1px solid var(--border);
+  padding: 24px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+footer a { color: var(--accent); }

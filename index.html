@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wix Headless Demo</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛍️</text></svg>" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <p class="eyebrow">Wix Headless · GitHub Pages</p>
+      <h1>Headless Storefront</h1>
+      <p class="subtitle">
+        A static site that fetches live products and booking services from a Wix
+        site via the <code>@wix/sdk</code> — no server required.
+      </p>
+    </header>
+
+    <main>
+      <section>
+        <h2>Products</h2>
+        <p class="section-note">Fetched live from the Wix Stores catalog.</p>
+        <div id="products" class="grid" aria-busy="true">
+          <p class="loading">Loading products…</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Booking Services</h2>
+        <p class="section-note">Fetched live from Wix Bookings.</p>
+        <div id="services" class="grid" aria-busy="true">
+          <p class="loading">Loading services…</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        Built with <a href="https://dev.wix.com/docs/go-headless" target="_blank" rel="noreferrer">Wix Headless</a>
+        · Deployed on GitHub Pages
+      </p>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
