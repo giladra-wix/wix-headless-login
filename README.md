@@ -13,13 +13,13 @@ no server.
 - Vite builds the site to static assets; a GitHub Actions workflow deploys them
   to GitHub Pages on every push to `main`.
 
-## Use your own Wix site
+## Point it at a different Wix site
 
-The demo uses the client ID from the official Wix Headless tutorials. To point
-it at your own site:
+The site currently uses the "GitHub Pages storefront" OAuth app on the
+`homegoods-premium` site. To switch:
 
-1. Create a Headless project at [manage.wix.com](https://manage.wix.com)
-   (or enable Headless on an existing site with Stores/Bookings).
+1. Open the target site's dashboard at [manage.wix.com](https://manage.wix.com)
+   (any site with Stores/Bookings content works).
 2. Go to **Settings → Headless Settings → OAuth Apps** and create an OAuth app.
 3. Copy the client ID into `CLIENT_ID` in `src/main.js`.
 

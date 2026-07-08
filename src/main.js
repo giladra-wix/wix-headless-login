@@ -3,10 +3,9 @@ import { products } from '@wix/stores';
 import { services } from '@wix/bookings';
 import { renderDashboard, dashboardError } from './dashboard.js';
 
-// Demo client ID from the official Wix Headless tutorials.
-// Replace with your own OAuth app client ID from
-// Wix Dashboard → Settings → Headless Settings → OAuth Apps.
-const CLIENT_ID = '10c1663b-2cdf-47c5-a3ef-30c2e8543849';
+// OAuth app "GitHub Pages storefront" on the homegoods-premium site.
+// Manage it in the Wix Dashboard → Settings → Headless Settings → OAuth Apps.
+const CLIENT_ID = '502745f4-c3c8-4c47-9c68-b9fbbf6cafc7';
 
 const wix = createClient({
   modules: { products, services },
@@ -43,7 +42,7 @@ function render(containerId, items) {
   container.replaceChildren();
   container.removeAttribute('aria-busy');
   if (!items.length) {
-    container.innerHTML = '<p class="loading">Nothing here yet.</p>';
+    container.closest('section').hidden = true;
     return;
   }
   items.forEach((item) => container.append(card(item)));
