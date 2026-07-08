@@ -1,6 +1,7 @@
 import { createClient, OAuthStrategy } from '@wix/sdk';
 import { products } from '@wix/stores';
 import { services } from '@wix/bookings';
+import { renderDashboard, dashboardError } from './dashboard.js';
 
 // Demo client ID from the official Wix Headless tutorials.
 // Replace with your own OAuth app client ID from
@@ -57,10 +58,16 @@ function renderError(containerId, err) {
 
 async function loadProducts() {
   try {
-    const { items } = await wix.products.queryProducts().limit(8).find();
+    const { items } = await wix.products.queryProducts().limit(100).find();
+    try {
+      renderDashboard(items);
+    } catch (err) {
+      dashboardError();
+      console.error('Failed to render dashboard:', err);
+    }
     render(
       'products',
-      items.map((p) => ({
+      items.slice(0, 8).map((p) => ({
         image: mediaUrl(p.media?.mainMedia?.image?.url),
         title: p.name,
         price: p.priceData?.formatted?.price,
@@ -69,6 +76,7 @@ async function loadProducts() {
     );
   } catch (err) {
     renderError('products', err);
+    dashboardError();
   }
 }
 

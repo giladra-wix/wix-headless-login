@@ -18,6 +18,30 @@
     </header>
 
     <main>
+      <section id="dashboard" aria-busy="true">
+        <h2>Catalog at a glance</h2>
+        <p class="section-note">Computed live from the Wix Stores catalog.</p>
+        <div id="kpis" class="kpi-row"></div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Product prices</h3>
+            <button id="view-toggle" type="button" aria-pressed="false">View as table</button>
+          </div>
+          <div id="chart-view">
+            <div id="price-chart" class="viz-plot"></div>
+          </div>
+          <div id="table-view" hidden>
+            <table id="price-table">
+              <thead>
+                <tr><th scope="col">Product</th><th scope="col" class="num">Price</th><th scope="col">Availability</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <p class="loading">Loading catalog…</p>
+      </section>
+
       <section>
         <h2>Products</h2>
         <p class="section-note">Fetched live from the Wix Stores catalog.</p>
