@@ -4,10 +4,7 @@ import { services } from '@wix/bookings';
 import { members } from '@wix/members';
 import { renderDashboard, dashboardError } from './dashboard.js';
 import { initAuth, storedTokens, persistTokens } from './auth.js';
-
-// OAuth app "GitHub Pages storefront" on the homegoods-premium site.
-// Manage it in the Wix Dashboard → Settings → Headless Settings → OAuth Apps.
-const CLIENT_ID = '502745f4-c3c8-4c47-9c68-b9fbbf6cafc7';
+import { CLIENT_ID } from './config.js';
 
 const wix = createClient({
   modules: { products, services, members },
