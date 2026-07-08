@@ -4,7 +4,7 @@
 // and the session persists in localStorage.
 
 const SESSION_KEY = 'wixSession';
-const OAUTH_KEY = 'wixOAuthData';
+export const OAUTH_KEY = 'wixOAuthData';
 
 export function storedTokens() {
   try {
@@ -14,27 +14,11 @@ export function storedTokens() {
   }
 }
 
-function persistTokens(wix) {
+export function persistTokens(wix) {
   const tokens = wix.auth.getTokens();
   if (tokens?.accessToken?.value) {
     localStorage.setItem(SESSION_KEY, JSON.stringify(tokens));
   }
-}
-
-async function handleLoginCallback(wix) {
-  if (!/[#&](code|error)=/.test(window.location.hash)) return;
-  const returned = wix.auth.parseFromUrl();
-  history.replaceState(null, '', window.location.pathname + window.location.search);
-  if (returned.error) {
-    console.error('Login failed:', returned.errorDescription);
-    return;
-  }
-  const oAuthData = JSON.parse(localStorage.getItem(OAUTH_KEY) || 'null');
-  localStorage.removeItem(OAUTH_KEY);
-  if (!oAuthData) return;
-  const tokens = await wix.auth.getMemberTokens(returned.code, returned.state, oAuthData);
-  wix.auth.setTokens(tokens);
-  persistTokens(wix);
 }
 
 // Logging a member out, per the Wix-managed login doc:
@@ -63,12 +47,6 @@ export async function initAuth(wix) {
   const action = document.getElementById('auth-action');
   const greeting = document.getElementById('auth-greeting');
 
-  try {
-    await handleLoginCallback(wix);
-  } catch (err) {
-    console.error('Login callback failed:', err);
-  }
-
   if (wix.auth.loggedIn()) {
     greeting.textContent = `Hi, ${await memberDisplayName(wix)}`;
     greeting.hidden = false;
@@ -82,9 +60,8 @@ export async function initAuth(wix) {
       if (wix.auth.loggedIn()) {
         await logoutMember(wix);
       } else {
-        // TEST: redirect to a URL with no page behind it — expect a GitHub
-        // Pages 404 carrying #code= after login; the exchange never runs.
-        const callbackUri = new URL(`${import.meta.env.BASE_URL}api/auth/callback`, window.location.origin).href;
+        // Must exactly match an allowed redirect URI on the OAuth app.
+        const callbackUri = new URL(`${import.meta.env.BASE_URL}api/auth/callback/`, window.location.origin).href;
         const here = window.location.href.split(/[?#]/)[0];
         const oAuthData = wix.auth.generateOAuthData(callbackUri, here);
         localStorage.setItem(OAUTH_KEY, JSON.stringify(oAuthData));
