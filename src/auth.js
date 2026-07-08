@@ -37,6 +37,18 @@ async function handleLoginCallback(wix) {
   persistTokens(wix);
 }
 
+// Logging a member out, per the Wix-managed login doc:
+// https://dev.wix.com/docs/go-headless/self-managed-headless/authentication/members/wix-login-page/wix-managed-login-using-the-js-sdk#logging-a-member-out
+// 1. Get the logout URL from the client — Wix ends the member's session there.
+// 2. Clear the locally persisted session so this origin forgets the member.
+// 3. Redirect to the logout URL; Wix sends the browser back to the URL passed in.
+async function logoutMember(wix) {
+  const { logoutUrl } = await wix.auth.logout(window.location.href);
+  localStorage.removeItem(SESSION_KEY);
+  localStorage.removeItem(OAUTH_KEY);
+  window.location.href = logoutUrl;
+}
+
 async function memberDisplayName(wix) {
   try {
     const { member } = await wix.members.getCurrentMember();
@@ -68,9 +80,7 @@ export async function initAuth(wix) {
     action.disabled = true;
     try {
       if (wix.auth.loggedIn()) {
-        const { logoutUrl } = await wix.auth.logout(window.location.href);
-        localStorage.removeItem(SESSION_KEY);
-        window.location.href = logoutUrl;
+        await logoutMember(wix);
       } else {
         // TEST: redirect to a URL with no page behind it — expect a GitHub
         // Pages 404 carrying #code= after login; the exchange never runs.
