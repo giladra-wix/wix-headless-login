@@ -1,33 +1,23 @@
-# Wix Headless Demo
+# Wix Headless · Google Login
 
-A static storefront that fetches live products (Wix Stores) and booking services
-(Wix Bookings) from a Wix site using [Wix Headless](https://dev.wix.com/docs/go-headless)
-and the [`@wix/sdk`](https://dev.wix.com/docs/sdk) — deployed to GitHub Pages with
-no server.
+A minimal static site demonstrating member sign-in with Google on
+[Wix Headless](https://dev.wix.com/docs/go-headless), deployed to GitHub Pages
+with no server. Stripped-down copy of
+[wix-headless-demo](https://github.com/giladra-wix/wix-headless-demo) — login only.
 
 ## How it works
 
-- `@wix/sdk` authenticates as an anonymous visitor via `OAuthStrategy` using an
-  OAuth app client ID (all client-side, safe to expose).
-- Products and services are queried directly from the browser.
-- Member sign-in uses the Wix-managed login flow (OAuth 2.0 + PKCE) with
-  `getAuthUrl(oAuthData, { idp: 'google' })`, which skips the Wix login form
-  and sends members straight to Google. The callback exchanges the code for
-  member tokens persisted in `localStorage`. The redirect URI must be listed
-  under the OAuth app's allowed authorization redirect URIs, and Google login
-  must be enabled in the site's member signup settings.
-- Vite builds the site to static assets; a GitHub Actions workflow deploys them
-  to GitHub Pages on every push to `main`.
+- "Sign in with Google" runs the Wix-managed login flow (OAuth 2.0 + PKCE):
+  `generateOAuthData()` → `getAuthUrl(oAuthData, { idp: 'google' })` skips the
+  Wix login form and goes straight to Google.
+- Wix redirects back to this page with `#code=` and `#state=` in the URL
+  fragment; the exchange (`getMemberTokens` → `setTokens`) runs inline on load.
+- Member tokens persist in `localStorage`; signed-in members see a greeting
+  and a Sign out action.
 
-## Point it at a different Wix site
-
-The site currently uses the "GitHub Pages storefront" OAuth app on the
-`homegoods-premium` site. To switch:
-
-1. Open the target site's dashboard at [manage.wix.com](https://manage.wix.com)
-   (any site with Stores/Bookings content works).
-2. Go to **Settings → Headless Settings → OAuth Apps** and create an OAuth app.
-3. Copy the client ID into `CLIENT_ID` in `src/main.js`.
+The page's URL must be listed under the OAuth app's allowed authorization
+redirect URIs, and Google login must be enabled in the site's member signup
+settings.
 
 ## Local development
 
