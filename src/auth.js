@@ -72,9 +72,11 @@ export async function initAuth(wix) {
         localStorage.removeItem(SESSION_KEY);
         window.location.href = logoutUrl;
       } else {
-        // Must exactly match an allowed redirect URI on the OAuth app.
+        // TEST: redirect to a URL with no page behind it — expect a GitHub
+        // Pages 404 carrying #code= after login; the exchange never runs.
+        const callbackUri = new URL(`${import.meta.env.BASE_URL}api/auth/callback`, window.location.origin).href;
         const here = window.location.href.split(/[?#]/)[0];
-        const oAuthData = wix.auth.generateOAuthData(here, here);
+        const oAuthData = wix.auth.generateOAuthData(callbackUri, here);
         localStorage.setItem(OAUTH_KEY, JSON.stringify(oAuthData));
         // idp: 'google' skips the Wix login form and goes straight to Google.
         const { authUrl } = await wix.auth.getAuthUrl(oAuthData, { idp: 'google' });
