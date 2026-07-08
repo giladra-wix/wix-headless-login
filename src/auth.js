@@ -27,10 +27,24 @@ export function persistTokens(wix) {
 // 2. Clear the locally persisted session so this origin forgets the member.
 // 3. Redirect to the logout URL; Wix sends the browser back to the URL passed in.
 async function logoutMember(wix) {
-  const { logoutUrl } = await wix.auth.logout(window.location.href);
-  localStorage.removeItem(SESSION_KEY);
-  localStorage.removeItem(OAUTH_KEY);
-  window.location.href = logoutUrl;
+  const forgetSession = () => {
+    localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(OAUTH_KEY);
+  };
+  try {
+    // auth.logout() creates a redirect session from the current member token
+    // so Wix knows which session to terminate.
+    const { logoutUrl } = await wix.auth.logout(window.location.href);
+    forgetSession();
+    window.location.href = logoutUrl;
+  } catch (err) {
+    // FAILED_TO_EXTRACT_SESSION: the token's session is already dead
+    // (expired or revoked), so there is nothing to end server-side —
+    // forget it locally and reload as an anonymous visitor.
+    console.error('Server-side logout failed; clearing local session:', err);
+    forgetSession();
+    window.location.reload();
+  }
 }
 
 async function memberDisplayName(wix) {
