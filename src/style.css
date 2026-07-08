@@ -26,6 +26,31 @@ body {
   line-height: 1.6;
 }
 
+.auth-bar {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#auth-greeting { color: var(--muted); font-size: 0.875rem; }
+
+#auth-action {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.875rem;
+  padding: 6px 16px;
+  cursor: pointer;
+}
+
+#auth-action:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+#auth-action:disabled { opacity: 0.6; cursor: default; }
+
 .hero {
   padding: 72px 24px 48px;
   text-align: center;

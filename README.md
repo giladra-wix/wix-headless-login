@@ -10,6 +10,10 @@ no server.
 - `@wix/sdk` authenticates as an anonymous visitor via `OAuthStrategy` using an
   OAuth app client ID (all client-side, safe to expose).
 - Products and services are queried directly from the browser.
+- Member sign-in uses the Wix-managed login page (OAuth 2.0 + PKCE): the
+  "Sign in" button redirects to the Wix login, and the callback exchanges the
+  code for member tokens persisted in `localStorage`. The redirect URI must be
+  listed under the OAuth app's allowed authorization redirect URIs.
 - Vite builds the site to static assets; a GitHub Actions workflow deploys them
   to GitHub Pages on every push to `main`.
 

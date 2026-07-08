@@ -1,15 +1,17 @@
 import { createClient, OAuthStrategy } from '@wix/sdk';
 import { products } from '@wix/stores';
 import { services } from '@wix/bookings';
+import { members } from '@wix/members';
 import { renderDashboard, dashboardError } from './dashboard.js';
+import { initAuth, storedTokens, persistTokens } from './auth.js';
 
 // OAuth app "GitHub Pages storefront" on the homegoods-premium site.
 // Manage it in the Wix Dashboard → Settings → Headless Settings → OAuth Apps.
 const CLIENT_ID = '502745f4-c3c8-4c47-9c68-b9fbbf6cafc7';
 
 const wix = createClient({
-  modules: { products, services },
-  auth: OAuthStrategy({ clientId: CLIENT_ID }),
+  modules: { products, services, members },
+  auth: OAuthStrategy({ clientId: CLIENT_ID, tokens: storedTokens() }),
 });
 
 function mediaUrl(url) {
@@ -101,5 +103,5 @@ async function loadServices() {
   }
 }
 
-loadProducts();
-loadServices();
+initAuth(wix);
+Promise.allSettled([loadProducts(), loadServices()]).then(() => persistTokens(wix));

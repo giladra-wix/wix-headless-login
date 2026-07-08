@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@wix/bookings": "^1.0.0",
+    "@wix/members": "^1.0.485",
     "@wix/sdk": "^1.15.0",
     "@wix/stores": "^1.0.0"
   },
