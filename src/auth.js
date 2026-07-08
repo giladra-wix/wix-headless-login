@@ -75,7 +75,8 @@ export async function initAuth(wix) {
         const here = window.location.href.split(/[?#]/)[0];
         const oAuthData = wix.auth.generateOAuthData(here, here);
         localStorage.setItem(OAUTH_KEY, JSON.stringify(oAuthData));
-        const { authUrl } = await wix.auth.getAuthUrl(oAuthData);
+        // idp: 'google' skips the Wix login form and goes straight to Google.
+        const { authUrl } = await wix.auth.getAuthUrl(oAuthData, { idp: 'google' });
         window.location.href = authUrl;
       }
     } catch (err) {
