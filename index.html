@@ -10,14 +10,19 @@
   <body>
     <main class="hero">
       <p class="eyebrow">Wix Headless · GitHub Pages</p>
-      <h1>Google Login</h1>
+      <h1>Member Login</h1>
       <p class="subtitle">
         Member sign-in on a static site via the Wix-managed login flow
-        (OAuth 2.0 + PKCE) with <code>getAuthUrl(oAuthData, { idp: 'google' })</code>.
+        (OAuth 2.0 + PKCE) with <code>getAuthUrl(oAuthData, { idp })</code>.
       </p>
       <div class="auth-box">
         <span id="auth-greeting" hidden></span>
-        <button id="auth-action" type="button" disabled>Sign in with Google</button>
+        <div id="auth-buttons">
+          <button data-idp="google" type="button" disabled>Sign in with Google</button>
+          <button data-idp="facebook" type="button" disabled>Sign in with Facebook</button>
+          <button data-idp="sso" type="button" disabled>Sign in with SSO</button>
+        </div>
+        <button id="auth-signout" type="button" hidden>Sign out</button>
       </div>
     </main>
 

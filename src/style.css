@@ -63,7 +63,14 @@ body {
 
 #auth-greeting { color: var(--text); font-size: 1.1rem; font-weight: 600; }
 
-#auth-action {
+#auth-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.auth-box button {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 10px;
@@ -74,8 +81,8 @@ body {
   cursor: pointer;
 }
 
-#auth-action:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-#auth-action:disabled { opacity: 0.6; cursor: default; }
+.auth-box button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.auth-box button:disabled { opacity: 0.6; cursor: default; }
 
 footer {
   border-top: 1px solid var(--border);

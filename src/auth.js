@@ -57,35 +57,66 @@ async function memberDisplayName(wix) {
   }
 }
 
+import { SSO_CONNECTION_ID } from './config.js';
+
+// Maps a button's data-idp to the SDK's IdentityProvider:
+// 'google' | 'facebook' | { connectionId } for a custom SSO (OIDC) provider.
+function identityProvider(key) {
+  return key === 'sso' ? { connectionId: SSO_CONNECTION_ID } : key;
+}
+
+// Redirects to the chosen identity provider, skipping the Wix login form.
+async function signIn(wix, idp) {
+  // Must exactly match an allowed redirect URI on the OAuth app.
+  const callbackUri = new URL(`${import.meta.env.BASE_URL}api/auth/callback/`, window.location.origin).href;
+  const here = window.location.href.split(/[?#]/)[0];
+  const oAuthData = wix.auth.generateOAuthData(callbackUri, here);
+  localStorage.setItem(OAUTH_KEY, JSON.stringify(oAuthData));
+  const { authUrl } = await wix.auth.getAuthUrl(oAuthData, { idp });
+  window.location.href = authUrl;
+}
+
 export async function initAuth(wix) {
-  const action = document.getElementById('auth-action');
   const greeting = document.getElementById('auth-greeting');
+  const signInButtons = document.getElementById('auth-buttons');
+  const signOut = document.getElementById('auth-signout');
+  const idpButtons = [...signInButtons.querySelectorAll('button[data-idp]')];
 
   if (wix.auth.loggedIn()) {
     greeting.textContent = `Hi, ${await memberDisplayName(wix)}`;
     greeting.hidden = false;
-    action.textContent = 'Sign out';
+    signInButtons.hidden = true;
+    signOut.hidden = false;
   }
-  action.disabled = false;
-
-  action.addEventListener('click', async () => {
-    action.disabled = true;
-    try {
-      if (wix.auth.loggedIn()) {
-        await logoutMember(wix);
-      } else {
-        // Must exactly match an allowed redirect URI on the OAuth app.
-        const callbackUri = new URL(`${import.meta.env.BASE_URL}api/auth/callback/`, window.location.origin).href;
-        const here = window.location.href.split(/[?#]/)[0];
-        const oAuthData = wix.auth.generateOAuthData(callbackUri, here);
-        localStorage.setItem(OAUTH_KEY, JSON.stringify(oAuthData));
-        // idp: 'google' skips the Wix login form and goes straight to Google.
-        const { authUrl } = await wix.auth.getAuthUrl(oAuthData, { idp: 'google' });
-        window.location.href = authUrl;
+  const enableButtons = () =>
+    idpButtons.forEach((b) => {
+      if (b.dataset.idp === 'sso' && !SSO_CONNECTION_ID) {
+        b.title = 'Not configured — set SSO_CONNECTION_ID in src/config.js';
+        return;
       }
+      b.disabled = false;
+    });
+  enableButtons();
+
+  idpButtons.forEach((button) =>
+    button.addEventListener('click', async () => {
+      idpButtons.forEach((b) => { b.disabled = true; });
+      try {
+        await signIn(wix, identityProvider(button.dataset.idp));
+      } catch (err) {
+        console.error('Sign-in failed:', err);
+        enableButtons();
+      }
+    }),
+  );
+
+  signOut.addEventListener('click', async () => {
+    signOut.disabled = true;
+    try {
+      await logoutMember(wix);
     } catch (err) {
-      console.error('Sign-in failed:', err);
-      action.disabled = false;
+      console.error('Sign-out failed:', err);
+      signOut.disabled = false;
     }
   });
 }
