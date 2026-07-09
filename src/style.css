@@ -70,6 +70,9 @@ body {
   gap: 12px;
 }
 
+/* display:flex above outspecifies the UA's [hidden] rule — restate it */
+#auth-buttons[hidden] { display: none; }
+
 .auth-box button {
   background: var(--surface);
   border: 1px solid var(--border);
