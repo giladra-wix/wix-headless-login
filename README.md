@@ -1,6 +1,7 @@
+
 # Wix Headless · Google Login
 
-A minimal static site demonstrating member sign-in with Google on
+A minimal [static site](https://giladra-wix.github.io/wix-headless-login/) demonstrating member sign-in with Google on
 [Wix Headless](https://dev.wix.com/docs/go-headless), deployed to GitHub Pages
 with no server. Stripped-down copy of
 [wix-headless-demo](https://github.com/giladra-wix/wix-headless-demo) — login only.
